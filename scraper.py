@@ -70,7 +70,7 @@ block = text_find.find('ul')
 links = block.find_all('a', 'child')
 for link in links:
     csvfiles_html = urllib2.urlopen( 'http://www.bury.gov.uk/' + link['href'])
-    sp = BeautifulSoup(csvfiles_html)
+    sp = BeautifulSoup(csvfiles_html, 'lxml')
     blocks_download = sp.find('div', attrs={'id':'download'})
     links = blocks_download.find_all('a', 'media')
     for link in links:
