@@ -95,20 +95,15 @@ soup = BeautifulSoup(html, 'lxml')
 
 #### SCRAPE DATA
 
-block = soup.find('ul', 'list-unstyled search-results')
-links = block.find_all('a')
+
+links = soup.find_all('a', 'media')
 for link in links:
-    csvfiles_html = urllib2.urlopen(link['href'])
-    sp = BeautifulSoup(csvfiles_html, 'lxml')
-    blocks_download = sp.find('div', attrs={'id':'download'})
-    links = blocks_download.find_all('a', 'media')
-    for link in links:
-        url = 'http://www.bury.gov.uk/' + link['href']
-        csvfile = link.text
-        csvMth = csvfile.split('-')[0][:3]
-        csvYr = csvfile.split('-')[0].strip()[-4:]
-        csvMth = convert_mth_strings(csvMth.upper())
-        data.append([csvYr, csvMth, url])
+    url = 'http://www.bury.gov.uk/' + link['href']
+    csvfile = link.text
+    csvMth = csvfile.split('-')[0][:3]
+    csvYr = csvfile.split('-')[0].strip()[-4:]
+    csvMth = convert_mth_strings(csvMth.upper())
+    data.append([csvYr, csvMth, url])
 
 #### STORE DATA 1.0
 
@@ -121,7 +116,7 @@ for row in data:
     valid = validate(filename, file_url)
 
     if valid == True:
-        scraperwiki.sqlite.save(unique_keys=['l'], data={"l": file_url, "f": filename, "d": todays_date })
+        scraperwiki.sqlite.save(unique_keys=['f'], data={"l": file_url, "f": filename, "d": todays_date })
         print filename
     else:
         errors += 1
